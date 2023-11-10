@@ -16,7 +16,8 @@ SELECT COUNT(*) FROM intro_sql.final_airbnb;
 -- HINT: "Where" could it be?
 
 -- EXPECTED OUTPUT: Patricia
-SELECT host_name FROM intro_sql.final_airbnb 
+SELECT host_name 
+FROM intro_sql.final_airbnb 
 WHERE host_id = 63613;
 
 -- <<<<<<<<<<<<<<<<<<<<<< PROBLEM 3 >>>>>>>>>>>>>>>>>>>>>>>
@@ -24,7 +25,8 @@ WHERE host_id = 63613;
 -- HINT: This is a "distinct" operation...
 
 -- EXPECTED OUTPUT: 40 neighbourhoods listed
-SELECT DISTINCT neighbourhood FROM final_airbnb;
+SELECT DISTINCT neighbourhood 
+FROM final_airbnb;
 
 -- <<<<<<<<<<<<<<<<<<<<<< PROBLEM 4 >>>>>>>>>>>>>>>>>>>>>>>
 
@@ -42,14 +44,16 @@ SELECT MIN(price)FROM final_airbnb;
 -- HINT: Aggregates are more than just big rocks...
 
 -- EXPECTED OUTPUT: 165.3904
-SELECT AVG(availability_365) FROM intro_sql.final_airbnb;
+SELECT AVG(availability_365) 
+FROM intro_sql.final_airbnb;
 
 -- <<<<<<<<<<<<<<<<<<<<<< PROBLEM 6 >>>>>>>>>>>>>>>>>>>>>>>
 -- Find all listings that do NOT have a review
 -- HINT: There are a few ways to go about this. Remember that an empty cell is "no value", but not necessarily NULL
 
 -- EXPECTED OUTPUT: 6 rows
-SELECT id, number_of_reviews FROM final_airbnb
+SELECT id, number_of_reviews 
+FROM final_airbnb
 WHERE number_of_reviews < 1;
 
 -- <<<<<<<<<<<<<<<<<<<<<< PROBLEM 7 >>>>>>>>>>>>>>>>>>>>>>>
@@ -57,7 +61,8 @@ WHERE number_of_reviews < 1;
 -- HINT: Sorting is your friend!
 
 -- EXPECTED OUTPUT: 58059
-SELECT id FROM final_airbnb
+SELECT id 
+FROM final_airbnb
 WHERE room_type = "Private room"
 ORDER BY number_of_reviews DESC
 LIMIT 1;
@@ -69,7 +74,8 @@ LIMIT 1;
 
 -- EXPECTED OUTPUT: Williamsburg
 -- INVESTIGATE: Should Williamsburg be crowned the most popular neighbourhood?
-SELECT neighbourhood, COUNT(id) as Listings FROM final_airbnb
+SELECT neighbourhood, COUNT(id) as Listings 
+FROM final_airbnb
 GROUP BY neighbourhood
 ORDER BY Listings DESC
 LIMIT 1;
@@ -78,7 +84,8 @@ LIMIT 1;
 -- HINT: Sorting is still your friend! So are constraints.
 
 -- EXPECTED OUTPUT: 58059
-SELECT id FROM final_airbnb
+SELECT id 
+FROM final_airbnb
 WHERE minimum_nights < 7
 ORDER BY reviews_per_month DESC
 LIMIT 1;
@@ -90,8 +97,11 @@ LIMIT 1;
 -- HINT: Work this one step at a time. See if you can find a way to just display the count of listings per host first.
 
 -- EXPECTED OUTPUT: The Box House Hotel with 6 listings
-SELECT host_id, COUNT(id
-
+SELECT host_name, COUNT(id) as Listings 
+FROM final_airbnb
+GROUP BY host_id, host_name
+ORDER BY Listings DESC
+LIMIT 1;
 -- <<<<<<<<<<<<<<<<<<<<<< PROBLEM 11 >>>>>>>>>>>>>>>>>>>>>>>
 -- <<<<<<<<<<<<<<<<<<<<<<< WRAP UP >>>>>>>>>>>>>>>>>>>>>>>>>
 -- What do you think makes a successful AirBnB rental in this market? What factors seem to be at play the most?
@@ -101,4 +111,13 @@ SELECT host_id, COUNT(id
 -- <<<<<<<<<<<<<<<<<<<<< ** BONUS ** >>>>>>>>>>>>>>>>>>>>>>>
 -- Find the the percent above or below each listing is compared to the average price for all listings.
 -- HINT: No hints! It's a bonus for a reason :)
+SELECT id, price,
+((price - (SELECT AVG(price) FROM final_airbnb)) / (SELECT AVG(price) FROM final_airbnb) * 100) AS PercentDiff  
+FROM final_airbnb
+
+-- This is malarkey. The equation is right. It won't
+-- let me group PercentDiff
+
+
+
 
